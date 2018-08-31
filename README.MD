@@ -4,6 +4,28 @@ This repository provides a VGGish model, implemented in Keras with tensorflow ba
 based on the model for [AudioSet](https://research.google.com/audioset/index.html). 
 For more details, please visit the [slim version](https://github.com/tensorflow/models/tree/master/research/audioset).
 
+
+
+## Install
+
+Create env if it is not created.
+
+```
+virtualenv -p python3 ~/envs/vggish
+```
+
+Activate env
+```
+source  ~/envs/vggish/bin/activate
+```
+
+Install req
+
+```
+pip install -r requirements.txt
+```
+
+
 ## Pretrained weights in Keras h5py:
 
 * [Model](https://drive.google.com/open?id=1mhqXZ8CANgHyepum7N4yrjiyIg6qaMe6) with the top fully connected layers
