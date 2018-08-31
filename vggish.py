@@ -11,19 +11,22 @@ from __future__ import absolute_import
 
 import sys
 sys.path.append('/home/hudi/anaconda2/lib/python2.7/site-packages/h5py')
-sys.path.append('/home/hudi/anaconda2/lib/python2.7/site-packages/Keras-2.0.6-py2.7.egg')
+sys.path.append(
+    '/home/hudi/anaconda2/lib/python2.7/site-packages/Keras-2.0.6-py2.7.egg')
 
 
 from keras.models import Model
 from keras.layers import Flatten, Dense, Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMaxPooling2D
 from keras.engine.topology import get_source_inputs
 from keras import backend as K
+from keras import utils
 
 import vggish_params as params
 
 
 # weight path
-WEIGHTS_PATH = '/home/brain/Documents/git/VGGish/vggish_audioset_weights_without_fc2.h5'
+WEIGHTS_PATH = 'https://github.com/andreidore/VGGish/releases/download/v0.1/vggish_audioset_weights.h5'
+
 
 def VGGish(load_weights=True, weights='audioset',
            input_tensor=None, input_shape=None,
@@ -58,31 +61,34 @@ def VGGish(load_weights=True, weights='audioset',
         aud_input = Input(shape=input_shape, name='input_1')
     else:
         if not K.is_keras_tensor(input_tensor):
-            aud_input = Input(tensor=input_tensor, shape=input_shape, name='input_1')
+            aud_input = Input(tensor=input_tensor,
+                              shape=input_shape, name='input_1')
         else:
             aud_input = input_tensor
 
-
-
     # Block 1
-    x = Conv2D(64, (3, 3), strides=(1, 1), activation='relu', padding='same', name='conv1')(aud_input)
+    x = Conv2D(64, (3, 3), strides=(1, 1), activation='relu',
+               padding='same', name='conv1')(aud_input)
     x = MaxPooling2D((2, 2), strides=(2, 2), padding='same', name='pool1')(x)
 
     # Block 2
-    x = Conv2D(128, (3, 3), strides=(1, 1), activation='relu', padding='same', name='conv2')(x)
+    x = Conv2D(128, (3, 3), strides=(1, 1), activation='relu',
+               padding='same', name='conv2')(x)
     x = MaxPooling2D((2, 2), strides=(2, 2), padding='same', name='pool2')(x)
 
     # Block 3
-    x = Conv2D(256, (3, 3), strides=(1, 1), activation='relu', padding='same', name='conv3/conv3_1')(x)
-    x = Conv2D(256, (3, 3), strides=(1, 1), activation='relu', padding='same', name='conv3/conv3_2')(x)
+    x = Conv2D(256, (3, 3), strides=(1, 1), activation='relu',
+               padding='same', name='conv3/conv3_1')(x)
+    x = Conv2D(256, (3, 3), strides=(1, 1), activation='relu',
+               padding='same', name='conv3/conv3_2')(x)
     x = MaxPooling2D((2, 2), strides=(2, 2), padding='same', name='pool3')(x)
 
     # Block 4
-    x = Conv2D(512, (3, 3), strides=(1, 1), activation='relu', padding='same', name='conv4/conv4_1')(x)
-    x = Conv2D(512, (3, 3), strides=(1, 1), activation='relu', padding='same', name='conv4/conv4_2')(x)
+    x = Conv2D(512, (3, 3), strides=(1, 1), activation='relu',
+               padding='same', name='conv4/conv4_1')(x)
+    x = Conv2D(512, (3, 3), strides=(1, 1), activation='relu',
+               padding='same', name='conv4/conv4_2')(x)
     x = MaxPooling2D((2, 2), strides=(2, 2), padding='same', name='pool4')(x)
-
-
 
     if include_top:
         # FC block
@@ -96,7 +102,6 @@ def VGGish(load_weights=True, weights='audioset',
         elif pooling == 'max':
             x = GlobalMaxPooling2D()(x)
 
-
     if input_tensor is not None:
         inputs = get_source_inputs(input_tensor)
     else:
@@ -104,16 +109,8 @@ def VGGish(load_weights=True, weights='audioset',
     # Create model.
     model = Model(inputs, x, name='VGGish')
 
-
-    # load weights
-    if load_weights:
-        if weights == 'audioset':
-            if include_top:
-                #model.load_weights(WEIGHTS_PATH_TOP)
-                model.load_weights("/home/andrei/Downloads/test_vggish/vggish2Keras-master/vggish_weights.ckpt")
-            else:
-                model.load_weights(WEIGHTS_PATH)
-        else:
-            print("failed to load weights")
+    weights_path = utils.get_file('vggish_audioset_weights.h5', WEIGHTS_PATH, cache_subdir='models',
+                                  file_hash='cf5cb18f216ce45a8a2c78ea80381024bbec93d396ef98faa0e0af70a5a1c0ce')
+    model.load_weights(weights_path)
 
     return model
