@@ -8,7 +8,8 @@ setup(
         'keras',
         'sklearn',
         'numpy',
-        'h5py'
+        'h5py',
+        'resampy'
     ],
     setup_requires=[
         'pytest-runner',
