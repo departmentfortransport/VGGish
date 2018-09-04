@@ -39,9 +39,6 @@ def preprocess_sound(data, sample_rate):
       lower_edge_hertz=vggish_params.MEL_MIN_HZ,
       upper_edge_hertz=vggish_params.MEL_MAX_HZ)
 
-  print("MEL")
-  print(log_mel.shape)
-
   # Frame features into examples.
   features_sample_rate = 1.0 / vggish_params.STFT_HOP_LENGTH_SECONDS
   example_window_length = int(round(
