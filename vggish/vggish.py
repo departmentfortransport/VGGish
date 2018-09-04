@@ -6,26 +6,21 @@
 
 """
 
-from __future__ import print_function
-from __future__ import absolute_import
-
-import sys
-sys.path.append('/home/hudi/anaconda2/lib/python2.7/site-packages/h5py')
-sys.path.append(
-    '/home/hudi/anaconda2/lib/python2.7/site-packages/Keras-2.0.6-py2.7.egg')
+from __future__ import absolute_import, print_function
 
 
-from keras.models import Model
-from keras.layers import Flatten, Dense, Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMaxPooling2D
-from keras.engine.topology import get_source_inputs
 from keras import backend as K
 from keras import utils
+from keras.engine.topology import get_source_inputs
+from keras.layers import (Conv2D, Dense, Flatten, GlobalAveragePooling2D,
+                          GlobalMaxPooling2D, Input, MaxPooling2D)
+from keras.models import Model
 
-import vggish_params as params
-
+from . import vggish_params as params
 
 # weight path
 WEIGHTS_PATH = 'https://github.com/andreidore/VGGish/releases/download/v0.1/vggish_audioset_weights.h5'
+WEIGHTS_PATH_NO_TOP = 'https://github.com/andreidore/VGGish/releases/download/v0.1/vggish_audioset_weights_without_fc2.h5'
 
 
 def VGGish(load_weights=True, weights='audioset',
@@ -109,8 +104,17 @@ def VGGish(load_weights=True, weights='audioset',
     # Create model.
     model = Model(inputs, x, name='VGGish')
 
-    weights_path = utils.get_file('vggish_audioset_weights.h5', WEIGHTS_PATH, cache_subdir='models',
-                                  file_hash='cf5cb18f216ce45a8a2c78ea80381024bbec93d396ef98faa0e0af70a5a1c0ce')
-    model.load_weights(weights_path)
+    if load_weights:
+        if weights == 'audioset':
+            if include_top:
+                weights_path = utils.get_file('vggish_audioset_weights.h5', WEIGHTS_PATH, cache_subdir='models',
+                                              file_hash='cf5cb18f216ce45a8a2c78ea80381024bbec93d396ef98faa0e0af70a5a1c0ce')
+            else:
+                weights_path = utils.get_file('vggish_audioset_weights_without_fc2.h5', WEIGHTS_PATH_NO_TOP, cache_subdir='models',
+                                              file_hash='18ce51b993c42a9f3316329165437e1f3507cf1e70950247f48c9e2c20b79ce4')
+
+            model.load_weights(weights_path)
+        else:
+            print("failed to load weights")
 
     return model

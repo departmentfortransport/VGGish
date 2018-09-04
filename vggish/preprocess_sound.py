@@ -1,8 +1,8 @@
 from __future__ import division
 
 import numpy as np
-import mel_features
-import vggish_params
+from . import mel_features
+from . import vggish_params
 import resampy
 
 def preprocess_sound(data, sample_rate):
@@ -38,6 +38,9 @@ def preprocess_sound(data, sample_rate):
       num_mel_bins=vggish_params.NUM_MEL_BINS,
       lower_edge_hertz=vggish_params.MEL_MIN_HZ,
       upper_edge_hertz=vggish_params.MEL_MAX_HZ)
+
+  print("MEL")
+  print(log_mel.shape)
 
   # Frame features into examples.
   features_sample_rate = 1.0 / vggish_params.STFT_HOP_LENGTH_SECONDS
