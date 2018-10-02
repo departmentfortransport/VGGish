@@ -19,8 +19,8 @@ from keras.models import Model
 from . import vggish_params as params
 
 # weight path
-WEIGHTS_PATH = 'https://github.com/andreidore/VGGish/releases/download/v0.1/vggish_audioset_weights.h5'
-WEIGHTS_PATH_NO_TOP = 'https://github.com/andreidore/VGGish/releases/download/v0.1/vggish_audioset_weights_without_fc2.h5'
+WEIGHTS_PATH = 'weights/vggish_audioset_weights.h5'
+WEIGHTS_PATH_NO_TOP = 'weights/vggish_audioset_weights_without_fc2.h5'
 
 
 def VGGish(load_weights=True, weights='audioset',
@@ -107,13 +107,9 @@ def VGGish(load_weights=True, weights='audioset',
     if load_weights:
         if weights == 'audioset':
             if include_top:
-                weights_path = utils.get_file('vggish_audioset_weights.h5', WEIGHTS_PATH, cache_subdir='models',
-                                              file_hash='cf5cb18f216ce45a8a2c78ea80381024bbec93d396ef98faa0e0af70a5a1c0ce')
+                model.load_weights(WEIGHTS_PATH)
             else:
-                weights_path = utils.get_file('vggish_audioset_weights_without_fc2.h5', WEIGHTS_PATH_NO_TOP, cache_subdir='models',
-                                              file_hash='18ce51b993c42a9f3316329165437e1f3507cf1e70950247f48c9e2c20b79ce4')
-
-            model.load_weights(weights_path)
+                model.load_weights(WEIGHTS_PATH_NO_TOP)
         else:
             print("failed to load weights")
 
