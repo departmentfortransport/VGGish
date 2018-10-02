@@ -1,1 +1,5 @@
 __pycache__
+weights/
+env/
+.python-version
+audioset_v1_embeddings/
